@@ -1,26 +1,20 @@
 'use client'
 
-import React from 'react';
-import type { FormProps } from 'antd';
-import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
-import Link from 'next/link';
-import { ArrowLeftOutlined } from '@ant-design/icons';
-// import '@/component/auth/login/login.page.scss'
-type FieldType = {
-    username?: string;
-    password?: string;
-    remember?: string;
-};
-const ClientLoginPage = () => {
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Button, Col, Divider, Form, FormProps, Input, Row } from "antd"
+import Link from "antd/es/typography/Link";
+
+const ClientRegisterPage = () => {
+    const onFinish: FormProps['onFinish'] = (values) => {
         console.log('Success:', values);
     };
 
-    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
     return (
-        <Row justify={"center"} style={{ marginTop: "30px" }}>
+        <Row justify={'center'} style={{ marginTop: '30px' }}>
             <Col xs={24} md={16} lg={8}>
                 <fieldset style={{
                     padding: "15px",
@@ -28,10 +22,14 @@ const ClientLoginPage = () => {
                     border: "1px solid #ccc",
                     borderRadius: "5px"
                 }}>
-                    <legend>Log in</legend>
+                    <legend>
+                        Sign up your account
+                    </legend>
                     <Form
                         name="basic"
+                        initialValues={{ remember: true }}
                         onFinish={onFinish}
+                        onFinishFailed={onFinishFailed}
                         autoComplete="off"
                         layout='vertical'
                     >
@@ -47,35 +45,39 @@ const ClientLoginPage = () => {
                         >
                             <Input />
                         </Form.Item>
+                        <Form.Item
+                            label="Email"
+                            name="username"
+                            rules={[{ required: true, message: 'Please input your username!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
 
                         <Form.Item
                             label="Password"
                             name="password"
-                            rules={[
-                                {
-                                    required: true,
-                                    message: 'Please input your password!',
-                                },
-                            ]}
+                            rules={[{ required: true, message: 'Please input your password!' }]}
                         >
                             <Input.Password />
                         </Form.Item>
-                        <Form.Item
-                        >
+
+                        <Form.Item >
                             <Button type="primary" htmlType="submit">
-                                Login
-                            </Button> 
+                                Register
+                            </Button>
                         </Form.Item>
+                        <Link href={"/"}><ArrowLeftOutlined /> Quay lại trang chủ</Link>
                     </Form>
-                    <Link href={"/"}><ArrowLeftOutlined /> Return homepage</Link>
                     <Divider />
                     <div style={{ textAlign: "center" }}>
-                        You don't have an account? <Link href={"/auth/register"}>Sign up here</Link>
+                        You already have an account? <Link href={"/auth/register"}>Login here</Link>
                     </div>
                 </fieldset>
+
             </Col>
         </Row>
+
     )
 }
 
-export default ClientLoginPage
+export default ClientRegisterPage
