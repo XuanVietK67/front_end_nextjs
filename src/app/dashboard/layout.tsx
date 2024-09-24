@@ -7,7 +7,7 @@ import AdminHeader from '@/component/layout/admin.header';
 import AdminSidebar from '@/component/layout/admin.sidebar';
 import AdminContent from '@/component/layout/admin.content';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
-
+import '@/app/dashboard/layout.scss'
 const AdminLayout = ({
     children,
 }: Readonly<{
@@ -15,29 +15,24 @@ const AdminLayout = ({
 }>) => {
     const { Content } = Layout;
     return (
-        <Layout>
-            <AdminSidebar />
-            <Layout>
-                <AdminHeader />
-                <Content style={{ margin: '24px 16px 0' }}>
-                    <div
-                        style={{
-                            padding: 24,
-                            minHeight: 360,
-                            background: "#ccc",
-                            borderRadius: "#ccc",
-                        }}
-                    >
-                        <AntdRegistry>
-                            <AdminContent>
-                                {children}
-                            </AdminContent>
-                        </AntdRegistry>
-                    </div>
-                </Content>
-                <AdminFooter />
-            </Layout>
-        </Layout>
+        <div className="dashboard-container">
+            <div className="left">
+                <AdminSidebar />
+            </div>
+            <div className="right">
+                <div className="header">
+                    <AdminHeader />
+                </div>
+                <div className="content">
+                    <AdminContent>
+                        {children}
+                    </AdminContent>
+                </div>
+                <div className="footer">
+                    <AdminFooter />
+                </div>
+            </div>
+        </div>
     )
 }
 export default AdminLayout

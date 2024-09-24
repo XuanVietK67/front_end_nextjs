@@ -1,12 +1,9 @@
-import { Button } from "antd";
+import Homepage from "@/component/homepage/homepage";
 
 export default function Home() {
   return (
     <div>
-      hello xuan viet from nextjs
-      <div>
-      <Button type="primary">Button</Button>
-      </div>
+      <Homepage/>
     </div>
   );
 }

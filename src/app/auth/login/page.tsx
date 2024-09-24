@@ -1,8 +1,9 @@
+import ClientLoginPage from "@/component/auth/login/login.page"
+
 const LoginPage = () => {
     return (
-        <div>
-            hello world from login page
-        </div>
+        <ClientLoginPage />
     )
 }
 export default LoginPage
+
