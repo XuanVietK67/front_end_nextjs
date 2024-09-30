@@ -1,17 +1,37 @@
 'use client'
 import React from 'react';
 import type { FormProps } from 'antd';
-import { Button, Checkbox, Col, Divider, Flex, Form, Input, Row, Space } from 'antd';
+import { Button, Checkbox, Col, Divider, Flex, Form, Input, notification, Row, Space } from 'antd';
 import { GiReturnArrow } from 'react-icons/gi';
+import { signIn } from "next-auth/react"
 import Link from 'next/link';
+import { authenticate } from '@/utils/actions';
+import { useRouter } from 'next/navigation';
+import { MdError } from "react-icons/md";
+
 type FieldType = {
-    username?: string;
-    password?: string;
+    username: string;
+    password: string;
     remember?: string;
 };
 const ClientLoginPage = () => {
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-        console.log('Success:', values);
+    const router = useRouter()
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        const { username, password } = values
+        const res = await authenticate(username, password)
+        if ((res as any).error) {
+            notification.error({
+                message: "Error login",
+                description: res.error,
+                icon:<MdError style={{color:'red'}}/>
+            })
+        }
+        else {
+            notification.success({
+                message: "login successfully"
+            })
+            router.push('/dashboard')
+        }
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
@@ -33,7 +53,7 @@ const ClientLoginPage = () => {
                         name="basic"
                         style={{
                             maxWidth: 600,
-                            marginTop:'1vh',
+                            marginTop: '1vh',
                         }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
@@ -59,7 +79,10 @@ const ClientLoginPage = () => {
 
                         <Form.Item
                         >
-                            <Button type="primary" htmlType="submit">
+                            <Button
+                                type="primary" htmlType="submit"
+                            // onClick={()=>onFinish(values)}
+                            >
                                 Submit
                             </Button>
 
@@ -69,8 +92,8 @@ const ClientLoginPage = () => {
                     <Divider />
                     <div
                         style={{
-                            display:'flex',
-                            justifyContent:'center',
+                            display: 'flex',
+                            justifyContent: 'center',
                         }}
                     >
                         You don't have an account?  &nbsp;
