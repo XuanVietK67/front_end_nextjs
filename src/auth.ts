@@ -37,7 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         access_token: (res as any).data.access_token
                     }
                     console.log("check response: ", response)
-                    
+
                     return response
                 }
                 else if ((res as any).statusCode === 401) {
@@ -49,12 +49,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     // })
                     throw new InvalidLoginError("This account is not active")
                 }
-                else{
+                else {
                     throw new InvalidLoginError("user not found. Please checked your email/password")
                 }
             },
         }),
     ],
+    pages: {
+        signIn: "/auth/login",
+    },
     callbacks: {
         jwt({ token, user }) {
             if (user) { // User is available during sign-in
@@ -65,6 +68,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session({ session, token }) {
             (session.user as any) = token.user
             return session
+        },
+        authorized: async ({ auth }) => {
+            // Logged in users are authenticated, otherwise redirect to login page
+            return !!auth
         },
     },
 })

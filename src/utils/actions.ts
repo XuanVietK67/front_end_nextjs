@@ -11,8 +11,23 @@ export async function authenticate(username: string, password: string) {
         })
         return r
     } catch (error) {
-        return{
-            error: (error as any).code
+        if ((error as any).code==="Email/Password is invalid"){
+            return{
+                error:(error as any).code,
+                code: 1
+            }
+        }
+        else if ((error as any).code==="This account is not active"){
+            return{
+                error:(error as any).code,
+                code: 2
+            }
+        }
+        else{
+            return{
+                error:(error as any).code,
+                code: 0
+            }
         }
     }
 }

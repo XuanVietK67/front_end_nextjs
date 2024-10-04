@@ -8,7 +8,6 @@ import Link from 'next/link';
 import { authenticate } from '@/utils/actions';
 import { useRouter } from 'next/navigation';
 import { MdError } from "react-icons/md";
-
 type FieldType = {
     username: string;
     password: string;
@@ -25,6 +24,9 @@ const ClientLoginPage = () => {
                 description: res.error,
                 icon:<MdError style={{color:'red'}}/>
             })
+            if((res as any).code===2){
+                router.push('/auth/verify')
+            }
         }
         else {
             notification.success({

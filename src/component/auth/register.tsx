@@ -2,9 +2,11 @@
 
 import React from 'react';
 import type { FormProps } from 'antd';
-import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
+import { Button, Checkbox, Col, Divider, Form, Input, notification, Row } from 'antd';
 import Link from 'next/link';
 import { GiReturnArrow } from 'react-icons/gi';
+import { sendRequest } from '@/utils/api';
+import { useRouter } from 'next/navigation';
 
 type FieldType = {
     username?: string;
@@ -12,8 +14,31 @@ type FieldType = {
     email?: string;
 };
 const ClientRegisterPage = () => {
-    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
-        console.log('Success:', values);
+    const router = useRouter()
+    const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
+        // console.log('Success:', values);
+        const { email, password, username } = values
+        const res = await sendRequest({
+            method: 'POST',
+            url: "http://localhost:8080/api/auth/register",
+            body: {
+                email, password, username
+            }
+        })
+        console
+        if (!(res as any).error) {
+            notification.success({
+                message: "Register Success",
+                description: "Please check your gmail to get the code, please active your account."
+            })
+            router.push(`/auth/verify/${(res as any).data._id}`)
+        }
+        else{
+            notification.error({
+                message:'Register Error',
+                description: (res as any).message
+            })
+        }
     };
 
     const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
@@ -59,7 +84,7 @@ const ClientRegisterPage = () => {
                             name="username"
                             rules={[{ required: true, message: 'Please input your password!' }]}
                         >
-                            <Input.Password />
+                            <Input />
                         </Form.Item>
                         <Form.Item >
                             <Button type="primary" htmlType="submit">
