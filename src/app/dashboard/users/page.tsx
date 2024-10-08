@@ -1,7 +1,9 @@
+import TableUser from "@/component/user/user.table"
+
 const UserPage=()=>{
     return(
         <div>
-            hello world from User Page
+            Hello world from table page
         </div>
     )
 }

@@ -7,18 +7,11 @@ import { sendRequest } from '@/utils/api';
 import Link from 'next/link';
 import { GiReturnArrow } from 'react-icons/gi';
 
-type FieldType = {
-    username?: string;
-    password?: string;
-    email?: string;
-};
 const VerifyPage = () => {
     const router = useRouter()
     const params = useParams<{ tag: string; id: string }>()
-    console.log('check params: ', params.id)
     const [code, setCode] = useState("")
     const handleVerify = async () => {
-        // console.log("check code: ",code)
         const res = await sendRequest({
             method: 'POST',
             url: 'http://localhost:8080/api/auth/verify',
@@ -47,7 +40,7 @@ const VerifyPage = () => {
             url: 'http://localhost:8080/api/auth/mail',
             body:{
                 id:params.id,
-                code
+                code: code
             }
 
         })

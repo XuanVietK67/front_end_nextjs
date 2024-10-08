@@ -16,7 +16,6 @@ type FieldType = {
 const ClientRegisterPage = () => {
     const router = useRouter()
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        // console.log('Success:', values);
         const { email, password, username } = values
         const res = await sendRequest({
             method: 'POST',
@@ -25,13 +24,12 @@ const ClientRegisterPage = () => {
                 email, password, username
             }
         })
-        console
         if (!(res as any).error) {
             notification.success({
                 message: "Register Success",
                 description: "Please check your gmail to get the code, please active your account."
             })
-            router.push(`/auth/verify/${(res as any).data._id}`)
+            router.push(`/auth/login`)
         }
         else{
             notification.error({
@@ -41,9 +39,6 @@ const ClientRegisterPage = () => {
         }
     };
 
-    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
-        console.log('Failed:', errorInfo);
-    };
     return (
         <Row justify={'center'}>
             <Col xs={24} md={16} lg={8}>
@@ -60,7 +55,6 @@ const ClientRegisterPage = () => {
                         name="basic"
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
                         autoComplete="off"
                         layout='vertical'
                     >

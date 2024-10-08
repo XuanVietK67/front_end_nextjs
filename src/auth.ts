@@ -28,7 +28,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         password: credentials.password
                     }
                 })
-                // console.log("check res: ",res)
                 if ((res as any).statusCode === 201) {
                     const response = {
                         message: (res as any).message,
@@ -36,7 +35,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         ... (res as any).data.user,
                         access_token: (res as any).data.access_token
                     }
-                    console.log("check response: ", response)
 
                     return response
                 }
