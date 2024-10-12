@@ -1,100 +1,104 @@
 'use client'
 
 import React from 'react';
-import { Space, Table, Tag } from 'antd';
-import type { TableProps } from 'antd';
+import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { Avatar, Card } from 'antd';
+import type { PaginationProps } from 'antd';
+import { Pagination } from 'antd';
 
-interface DataType {
-    key: string;
-    name: string;
-    age: number;
-    address: string;
-    tags: string[];
-}
-
-const columns: TableProps<DataType>['columns'] = [
-    {
-        title: 'Name',
-        dataIndex: 'name',
-        key: 'name',
-        render: (text) => <a>{text}</a>,
-    },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-    },
-    {
-        title: 'Address',
-        dataIndex: 'address',
-        key: 'address',
-    },
-    {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
-            <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </>
-        ),
-    },
-    {
-        title: 'Action',
-        key: 'action',
-        render: (_, record) => (
-            <Space size="middle">
-                <a>Invite {record.name}</a>
-                <a>Delete</a>
-            </Space>
-        ),
-    },
-];
-
-const data: DataType[] = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-];
+const { Meta } = Card;
+const onChange: PaginationProps['onChange'] = (pageNumber) => {
+};
 
 const ClientViewClass = () => {
     return (
-        <Table<DataType> columns={columns} dataSource={data} />
+        <div style={{   
+            display:'flex',
+            flexDirection:'column',
+            // justifyContent:'space-around',
+            gap:'3vh',
+        }}>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+            }}>
+                <Card
+                    style={{ width: 300 }}
+                    cover={
+                        <img
+                            alt="example"
+                            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        />
+                    }
+                    actions={[
+                        <SettingOutlined key="setting" />,
+                        <EditOutlined key="edit" />,
+                        <EllipsisOutlined key="ellipsis" />,
+                    ]}
+                >
+                    <Meta
+                        avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
+                        title="Card title"
+                        description="This is the description"
+                    />
+                </Card>
+                <Card
+                    style={{ width: 300 }}
+                    cover={
+                        <img
+                            alt="example"
+                            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        />
+                    }
+                    actions={[
+                        <SettingOutlined key="setting" />,
+                        <EditOutlined key="edit" />,
+                        <EllipsisOutlined key="ellipsis" />,
+                    ]}
+                >
+                    <Meta
+                        avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
+                        title="Card title"
+                        description="This is the description"
+                    />
+                </Card>
+                <Card
+                    style={{ width: 300 }}
+                    cover={
+                        <img
+                            alt="example"
+                            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        />
+                    }
+                    actions={[
+                        <SettingOutlined key="setting" />,
+                        <EditOutlined key="edit" />,
+                        <EllipsisOutlined key="ellipsis" />,
+                    ]}
+                >
+                    <Meta
+                        avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
+                        title="Card title"
+                        description="This is the description"
+                    />
+                </Card>
+            </div>
+            <div style={{
+                display:'flex',
+                // flexDirection:'column',
+                // justifyContent:'right'
+                // alignItems:'flex-end',
+                justifyContent:'end',
+                alignItems:'flex-end'
+            }}>
+                <Pagination showQuickJumper defaultCurrent={2} total={500} onChange={onChange} />
+            </div>
+        </div>
     )
 }
 
 export default ClientViewClass
-
-
-
 
 
 

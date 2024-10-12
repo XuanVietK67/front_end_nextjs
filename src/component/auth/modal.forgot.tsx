@@ -89,7 +89,6 @@ const Forgot = (props: any) => {
                 username: username
             }
         })
-        console.log("check res0: ",res)
         if (!(res as any).error) {
             setCurrent(current + 1)
             notification.success({
@@ -114,7 +113,6 @@ const Forgot = (props: any) => {
                 code: code
             }
         })
-        console.log("check res1: ", res)
     }
     const handleStep2 = async () => {
         const res = await sendRequest({
@@ -125,13 +123,11 @@ const Forgot = (props: any) => {
                 password: password
             }
         })
-        console.log("check res2: ", res)
         props.setForgotPassword(false)
         notification.success({
             message: "Change password successfully",
             description: "Please login to using more feature"
         })
-        console.log("check res: ", res)
     }
     const handleCancel=()=>{
         props.setForgotPassword(false)

@@ -44,12 +44,11 @@ const VerifyPage = () => {
             }
 
         })
-        if(res){
+        if(res as any){
             notification.success({
                 message: "Resend Email Success",
                 description: 'Your Code sent to your email'
             })
-            console.log("check res: ",res)
         }
     }
     return (

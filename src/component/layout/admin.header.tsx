@@ -9,16 +9,16 @@ import { signOut, useSession } from "next-auth/react"
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const AdminHeader = (props : any) => {
-    const {session}=props
+const AdminHeader = (props: any) => {
+    const { session } = props
     const items: MenuItem[] = [
         {
             key: '1',
-            icon: <CgProfile style={{fontSize:'2vw', color:'powderblue'}}/>,
-            label: <div style={{display:'flex',alignItems:'center', fontSize:'1.5vw', color:'powderblue'}}>{session?.user?.email}</div>,
+            icon: <CgProfile style={{ fontSize: '2vw', color: 'powderblue' }} />,
+            label: <div style={{ display: 'flex', alignItems: 'center', fontSize: '1.5vw', color: 'powderblue' }}>{session?.user?.email}</div>,
             children: [
-                { key: '11', label: <div style={{fontSize:'1vw'}} >Profile</div> },
-                { key: '12', label: <div style={{fontSize:'1vw'}} onClick={()=>signOut()}>Log out</div> },
+                { key: '12', label: <div style={{ fontSize: '1vw' }} onClick={() => signOut()}>Log out</div> },
+                { key: '11', label: <div style={{ fontSize: '1vw' }} >Profile</div> },
             ],
         },
     ]
@@ -65,8 +65,8 @@ const AdminHeader = (props : any) => {
                     width: 350,
                     height: '7vh',
                     borderRadius: '5px',
-                    display:'flex',
-                    justifyContent:'center',
+                    display: 'flex',
+                    justifyContent: 'center',
                 }}
                 defaultSelectedKeys={['1']}
                 mode={mode}

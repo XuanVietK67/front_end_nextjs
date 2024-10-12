@@ -35,7 +35,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         ... (res as any).data.user,
                         access_token: (res as any).data.access_token
                     }
-
                     return response
                 }
                 else if ((res as any).statusCode === 401) {
@@ -57,9 +56,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         signIn: "/auth/login",
     },
     callbacks: {
-        jwt({ token, user }) {
+        jwt({ token, user, account}) {
             if (user) { // User is available during sign-in
                 token.user = user as any
+            }
+            if(account && account.access_token){
+                token.accessToken=account.access_token
             }
             return token
         },

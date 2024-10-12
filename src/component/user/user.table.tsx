@@ -1,8 +1,14 @@
 'use client'
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Space, Table, Tag } from 'antd';
 import type { TableProps } from 'antd';
+import type { PaginationProps } from 'antd';
+import { Pagination } from 'antd';
+import { sendRequest } from '@/utils/api';
+import { useSession } from 'next-auth/react';
+import { auth } from '@/auth';
+import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 
 interface DataType {
@@ -16,40 +22,21 @@ interface DataType {
 
 const columns: TableProps<DataType>['columns'] = [
     {
+        title: 'STT',
+        dataIndex: 'id',
+        key: 'id',
+    },
+    {
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
         render: (text) => <a>{text}</a>,
     },
-    {
-        title: 'Age',
-        dataIndex: 'age',
-        key: 'age',
-    },
+
     {
         title: 'Gmail',
         dataIndex: 'gmail',
         key: 'gmail',
-    },
-    {
-        title: 'Tags',
-        key: 'tags',
-        dataIndex: 'tags',
-        render: (_, { tags }) => (
-            <>
-                {tags.map((tag) => {
-                    let color = tag.length > 5 ? 'geekblue' : 'green';
-                    if (tag === 'loser') {
-                        color = 'volcano';
-                    }
-                    return (
-                        <Tag color={color} key={tag}>
-                            {tag.toUpperCase()}
-                        </Tag>
-                    );
-                })}
-            </>
-        ),
     },
     {
         title: 'Action',
@@ -64,32 +51,53 @@ const columns: TableProps<DataType>['columns'] = [
     },
 ];
 
-const data: DataType[] = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        gmail: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        gmail: 'London No. 1 Lake Park',
-        tags: ['loser'],
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        gmail: 'Sydney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-    },
-];
-const TableUser = () => {
+
+const TableUser = (props: any) => {
+    const { data } = props
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+    const router = useRouter()
+    const arr = data.data.result
+    const resultt = [{}]
+    const [current, setCurrent] = useState(1)
+    const [pageSize,setPageSize]=useState(3)
+    // const [pageSi]
+    arr.forEach((items: any, index: string) => {
+        let person = { key: -1, id: (data.data.pageInfo.currentPage - 1) * data.data.pageInfo.pageSize + 1, name: '', gmail: '', tag: [''] }
+        person.id = +index + person.id
+        person.key = person.id
+        person.name = items.name
+        person.gmail = items.email
+        person.tag = ['developer']
+        resultt[+index] = person
+    })
+    const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    };
+    const handleOnChange=(event : number)=>{
+        setCurrent(event)
+        router.replace(`${pathname}?current=${event}&pageSize=${pageSize}`)
+    }
     return (
-        <Table<DataType> columns={columns} dataSource={data} />
+        <div>
+            <Table<any> columns={columns} dataSource={resultt} pagination={false} />
+            <div style={{
+                display: 'flex',
+                marginTop: '2vh',
+                justifyContent: 'end',
+                alignItems: 'flex-end'
+            }}>
+                <Pagination
+                    showSizeChanger
+                    onShowSizeChange={onShowSizeChange}
+                    defaultCurrent={1}
+                    total={+data.data.pageInfo.totalItems}
+                    // onShowSizeChange={(event)=>PageSizeChange(event)}
+                    pageSize={3}
+                    onChange={(event) => handleOnChange(event)}
+                    // current={current}
+                />
+            </div>
+        </div>
     )
 }
 export default TableUser

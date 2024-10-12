@@ -43,8 +43,9 @@ const AdminSideBar = () => {
                             label: 'Class Action',
                             type: 'group',
                             children: [
-                                { key: '1', label: <Link href="/dashboard/classes/aclass/view"> View Class</Link> }, 
-                                { key: '2', label: <Link href={"/dashboard/classes/aclass/update"}>Update Class</Link> },
+                                { key: '1', label: <Link href="/dashboard/classes/aclass/view"> View Quizz</Link> }, 
+                                { key: '2', label: <Link href={"/dashboard/classes/aclass/update"}>Post Quizz</Link> },
+                                { key: '3', label: <Link href={"/dashboard/classes/aclass/postqa"}>Post Q/A</Link> },
                             ],
                         },
                         {
@@ -52,8 +53,8 @@ const AdminSideBar = () => {
                             label: 'Student Action',
                             type: 'group',
                             children: [
-                                { key: '3', label: 'View Student' },
-                                { key: '4', label: 'Update Student' },
+                                { key: '4', label: 'View Student' },
+                                { key: '5', label: 'Update Student' },
                             ],
                         },
                     ],
