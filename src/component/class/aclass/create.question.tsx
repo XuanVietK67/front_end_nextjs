@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 
 type FieldType = {
-    name?: string;
+    quizzId?: string;
     description?: string;
     level?: string;
     image?: string;
@@ -35,13 +35,18 @@ const beforeUpload = (file: FileType) => {
     return isJpgOrPng && isLt2M;
 };
 
-const CreateQuizz = (props: any) => {
+const CreateQuestion = (props: any) => {
+    const { data, accessToken } = props
+    const quizzs=data.data.res
+    // console.log("check quizzs: ",quizzs)
+    let items=[{value:'',label:''}]
+    quizzs.forEach((item: any, index: string)=>{
+        const contain={value: item.id,label:item.name}
+        items=[...items,contain]
+    })
     const router = useRouter()
-    const [level, setLevel] = useState<string>("Easy")
-    const {accessToken}=props
-    // const handleChangeLevel = (value: string) => {
-    // };
     const [loading, setLoading] = useState(false);
+    const [quizzId,setQuizzId]=useState("")
     const [imageUrl, setImageUrl] = useState<string>();
 
     const handleChange: UploadProps['onChange'] = (info) => {
@@ -58,24 +63,29 @@ const CreateQuizz = (props: any) => {
         </button>
     );
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        const data = { ...values, image: imageUrl }
-        const res = await sendRequest({
-            url: "http://localhost:8080/api/quizzs",
-            method: "POST",
-            body: data,
-            headers: {
+        const data={...values,image:imageUrl}
+        // console.log("check values: ",data)
+        const res=await sendRequest({
+            method:"POST",
+            url: "http://localhost:8080/api/question",
+            body:data,
+            headers:{
                 Authorization: `Bearer ${accessToken}`
-            },
+            }
         })
         console.log("check res: ",res)
-        if (!(res as any).error){
+        if(!(res as any).error){
             notification.success({
-                message:"Create quizz successfully",
-                description:"Go to Post Q/A to add your question"
+                message: 'Create question successfully',
+                description: 'Please add some answers to question.'
             })
-            router.push('/dashboard/classes/aclass/createquestion')
+            router.replace(`/dashboard/classes/aclass/postanswer?quizzId=${(res as any).data.res.quizzId}&questionId=${(res as any).data.res.questionId}`)
         }
     };
+    const handleChangeSelect=(value : any)=>{
+        // console.log("check value: ",value)
+        setQuizzId(value)
+    }
     return (
         <fieldset style={{
             border: '1px solid #ccc',
@@ -83,16 +93,26 @@ const CreateQuizz = (props: any) => {
             width: '50vw',
 
         }}>
-            <legend>Create Quizz</legend>
+            <legend>Create Question</legend>
             <Form
                 layout='vertical'
                 onFinish={onFinish}
             >
                 <Form.Item<FieldType>
-                    label="name"
-                    name="name"
+                    label="Quizz's name"
+                    name="quizzId"
                 >
-                    <Input />
+                    <Select
+                        onChange={(value)=>handleChangeSelect(value)}
+                        showSearch
+                        style={{ width: 500 }}
+                        placeholder="Select quizz which you want to add question"
+                        optionFilterProp="label"
+                        filterSort={(optionA, optionB) =>
+                            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                        }
+                        options={items}
+                    />
                 </Form.Item>
                 <Form.Item<FieldType>
                     label="description"
@@ -102,27 +122,6 @@ const CreateQuizz = (props: any) => {
                     <Input />
                 </Form.Item>
 
-                <Form.Item
-                    label="level"
-                    name="level"
-                >
-                    <Select
-                        // defaultValue="Easy"
-                        style={{ width: 200 }}
-                        onChange={(values) => setLevel(values)}
-                        options={[
-                            {
-                                label: <span>Level</span>,
-                                title: 'level',
-                                options: [
-                                    { label: <span>Easy</span>, value: 'Easy' },
-                                    { label: <span>Medium</span>, value: 'Medium' },
-                                    { label: <span>Hard</span>, value: 'Hard' },
-                                ],
-                            },
-                        ]}
-                    />
-                </Form.Item>
                 <Form.Item<FieldType>
                     label="image"
                     name="image"
@@ -154,5 +153,4 @@ const CreateQuizz = (props: any) => {
         </fieldset>
     )
 }
-export default CreateQuizz
-
+export default CreateQuestion

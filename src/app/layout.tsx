@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { SessionProvider } from "next-auth/react"
 import '@/app/globals.css';
-
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -19,11 +19,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AntdRegistry>
-          <SessionProvider>
-            {children}
-          </SessionProvider>
-        </AntdRegistry>
+        <AppRouterCacheProvider
+          options={{ key: 'css' }}
+        >
+          <AntdRegistry>
+            <SessionProvider>
+              {children}
+            </SessionProvider>
+          </AntdRegistry>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
