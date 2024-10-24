@@ -19,7 +19,7 @@ const ClientViewClass = (props: any) => {
         router.replace(`${pathname}?current=${value}&pageSize=${data.data.info.pageSize}`)
     }
     const quizzs = data.data.res
-    console.log("check quizzs: ",quizzs)
+    // console.log("check quizzs: ",quizzs)
     const handleSettingQuizz=(id: string)=>{
         console.log("check quizzId: ",id)
     }

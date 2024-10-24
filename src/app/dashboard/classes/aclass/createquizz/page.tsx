@@ -4,7 +4,8 @@ import { useActionState } from "react"
 
 const UpdateClass = async () => {
     const session = await auth()
-    const accessToken=session?.user?.access_token
+    const user=session?.user as any
+    const accessToken=user?.access_token
     // console.log("check session: ",session)
     return (
         <div style={{

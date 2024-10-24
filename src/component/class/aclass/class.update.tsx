@@ -71,9 +71,9 @@ const CreateQuizz = (props: any) => {
         if (!(res as any).error){
             notification.success({
                 message:"Create quizz successfully",
-                description:"Go to Post Q/A to add your question"
+                description:"Go to edit quizz page to manage your quizz"
             })
-            router.push('/dashboard/classes/aclass/createquestion')
+            router.push('/dashboard/classes/aclass/editquizz')
         }
     };
     return (

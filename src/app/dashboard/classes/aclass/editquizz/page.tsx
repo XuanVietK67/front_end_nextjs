@@ -4,7 +4,8 @@ import { sendRequest } from "@/utils/api"
 
 const EditQuizz = async () => {
     const session = await auth()
-    const accessToken = session?.user?.access_token
+    const user=session?.user as any
+    const accessToken = user.access_token
     const res = await sendRequest({
         url: "http://localhost:8080/api/quizzs/all",
         method: "GET",
@@ -13,16 +14,10 @@ const EditQuizz = async () => {
         },
     })
     return (
-        <div style={{
-            display:'flex',
-            justifyContent:'center',
-            alignItems:'center'
-        }}>
-            <ClientEditQuizz
-                data={res}
-                accessToken={accessToken}
-            />
-        </div>
+        <ClientEditQuizz
+            data={(res as any).data.res}
+            accessToken={accessToken}
+        />
     )
 }
 export default EditQuizz
