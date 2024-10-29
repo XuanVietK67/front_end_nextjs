@@ -87,6 +87,9 @@ const CreateQuizz = (props: any) => {
             <Form
                 layout='vertical'
                 onFinish={onFinish}
+                // style={{
+                //     padding:'0 2vw 0 2vw'
+                // }}
             >
                 <Form.Item<FieldType>
                     label="name"

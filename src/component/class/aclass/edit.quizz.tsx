@@ -2,7 +2,7 @@
 
 import { sendRequest } from "@/utils/api"
 import { CloseOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Checkbox, CheckboxProps, Flex, GetProp, Input, Select, Upload, UploadProps } from "antd";
+import { Button, Checkbox, CheckboxProps, Flex, GetProp, Input, notification, Select, Upload, UploadProps } from "antd";
 import React, { useEffect, useState } from 'react';
 import { AiFillPlusCircle } from "react-icons/ai";
 import { FcAnswers } from "react-icons/fc";
@@ -27,6 +27,33 @@ const getBase64 = (img: FileType, callback: (url: string) => void) => {
     reader.readAsDataURL(img);
 };
 
+const resizeImage=(base64Str: string)=>{
+
+    var img = new Image();
+    img.src = base64Str;
+    var canvas = document.createElement('canvas');
+    var MAX_WIDTH = 100;
+    var MAX_HEIGHT = 175;
+    var width = img.width;
+    var height = img.height;
+
+    if (width > height) {
+        if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+        }
+    } else {
+        if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+        }
+    }
+    canvas.width = width;
+    canvas.height = height;
+    var ctx = canvas.getContext('2d') as any
+    ctx.drawImage(img, 0, 0, width, height);
+    return canvas.toDataURL();
+}
 
 
 const ClientEditQuizz = (props: any) => {
@@ -38,7 +65,6 @@ const ClientEditQuizz = (props: any) => {
     const [imageUrl, setImageUrl] = useState<string>();
     const [currentQuizz, setCurrentQuizz] = useState<any>()
     const [quizzId, setQuizzId] = useState("")
-
 
     // console.log("check dsta: ",data)
 
@@ -90,7 +116,7 @@ const ClientEditQuizz = (props: any) => {
         // console.log(`checked = ${e.target.checked}`, index, answerIndex);
         let contain = questions[index] as any
         let questionsCoppy = questions as any
-        (contain as any).answers[+answerIndex].correctAnswer = e.target.checked
+        (contain as any).answers[+answerIndex].correctAnswer = e.target.checked ? "true" : "false"
         questionsCoppy[index] = contain
         setQuestions([...questionsCoppy])
     };
@@ -125,12 +151,13 @@ const ClientEditQuizz = (props: any) => {
     const handleChangeImageQuizz = (event: any) => {
         let quizzCoppy = currentQuizz
         getBase64(event.file.originFileObj as FileType, (url) => {
+            // contain.image = newUrl
             quizzCoppy.image = url
             setCurrentQuizz({ ...quizzCoppy })
         });
     }
 
-    const handleChangeQuestionImage = (event: any, index: number) => {
+    const handleChangeQuestionImage = async (event: any, index: number) => {
         let questionsCoppy = questions
         let contain = questions[index]
         getBase64(event.file.originFileObj as FileType, (url) => {
@@ -142,19 +169,60 @@ const ClientEditQuizz = (props: any) => {
 
     const handleDeleteQuestion = (index: number) => {
         let questionsCoppy = questions
-        questionsCoppy.splice(index,1)
+        questionsCoppy.splice(index, 1)
         setQuestions([...questionsCoppy])
     }
 
 
-    const handleDeleteAnswer=(qIndex: number,answerIndex: number)=>{
-        let questionsCoppy=questions
-        questionsCoppy[qIndex].answers.splice(answerIndex,1)
+    const handleDeleteAnswer = (qIndex: number, answerIndex: number) => {
+        let questionsCoppy = questions
+        questionsCoppy[qIndex].answers.splice(answerIndex, 1)
         setQuestions([...questionsCoppy])
+    }
+
+
+
+    const handleUpdateQuizz = async () => {
+        const { _id, name, description, level, image } = currentQuizz
+        console.log("check data update: ",questions)
+        const updateQuiz = await fetch('http://localhost:8080/api/quizzs/update', {
+            method: 'PATCH',
+            headers: new Headers({
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                authorization: ` Bearer ${accessToken}`,
+            }),
+            body: JSON.stringify({
+                _id, name, description, level, image
+            })
+        })
+        const resUpdateQuiz = await updateQuiz.json()
+
+        const res=await Promise.all(questions.map((async (items: any,index: number)=>{
+            const updateQuestion= await fetch('http://localhost:8080/api/quizzs/update/question',{
+                method:'PATCH',
+                headers: new Headers({
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    authorization: ` Bearer ${accessToken}`,
+                }),
+                body:JSON.stringify({
+                    _id: currentQuizz._id, index, question: items
+                })
+            })
+            return await updateQuestion.json()
+        })))
+        console.log("check res: ",res)
+        // if(res.statusCode==200){
+        //     notification.success({
+        //         message: "Update quizz Successfully"
+        //     })
+        // }
+        // console.log("check res update: ", res)
     }
 
     console.log("check questions: ", questions)
-    // console.log("check current quizz: ",currentQuizz)
+    console.log("check current quizz: ",currentQuizz)
     return (
         <div>
             <div style={{
@@ -239,7 +307,7 @@ const ClientEditQuizz = (props: any) => {
                                                 padding: '0'
                                             }}
                                         >
-                                            {items.image ? <img src={items.image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+                                            {items?.image ? <img src={items.image} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
                                         </Upload>
                                     </Flex>
 
@@ -271,7 +339,7 @@ const ClientEditQuizz = (props: any) => {
                                     </span>
                                 </div>
                                 {
-                                    items.answers && items.answers.length > 0 &&
+                                    items?.answers && items.answers.length > 0 &&
                                     items.answers.map((answer: any, answerIndex: number) => {
                                         return (
                                             <div style={{
@@ -309,7 +377,7 @@ const ClientEditQuizz = (props: any) => {
                                                             onClick={() => handleAddAnswer(index)}
                                                             size='small'
                                                         >
-                                                            Add Question
+                                                            Add Answer
                                                         </Button>
                                                     </span >
                                                     <span style={{
@@ -319,14 +387,14 @@ const ClientEditQuizz = (props: any) => {
 
                                                     }}>
                                                         {items && items.answers.length > 1 ?
-                                                            <Button 
-                                                            color='danger' 
-                                                            variant="solid" 
-                                                            size='small'
-                                                            onClick={()=> handleDeleteAnswer(index, answerIndex)}
+                                                            <Button
+                                                                color='danger'
+                                                                variant="solid"
+                                                                size='small'
+                                                                onClick={() => handleDeleteAnswer(index, answerIndex)}
                                                             >
-                                                                Delete Questions
-                                                                </Button>
+                                                                Delete Answer
+                                                            </Button>
                                                             :
                                                             ""
                                                         }
@@ -348,7 +416,14 @@ const ClientEditQuizz = (props: any) => {
                     justifyContent: 'right'
                 }}
             >
-                {quizzSelect ? <Button size="large" type='primary'>Update Quizz</Button> : ""}
+                {
+                    quizzSelect ?
+                        <Button size="large" type='primary' onClick={() => handleUpdateQuizz()}>
+                            Update Quizz
+                        </Button>
+                        :
+                        ""
+                }
             </div>
         </div>
     )

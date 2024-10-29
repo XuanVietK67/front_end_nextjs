@@ -15,7 +15,7 @@ export default async function DasboardLayout({
     const session = await auth()
     return (
         <Admin>
-            <div style={{ display: 'flex',overflow:'hidden', scrollbarWidth:'none', height:'100vh'}}>
+            <div style={{ display: 'flex', height:'100vh',width:'100vw'  }}>
                 <div className="left">
                     <AdminSideBar />
                 </div>
@@ -24,8 +24,7 @@ export default async function DasboardLayout({
                         session={session}
                     />
                     <div style={{
-                        overflow:'scroll',
-                        height:'90vh'
+                        height:'80vh'
                     }}>
                         <AdminContent>
                             {children}

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import { Avatar, Card } from 'antd';
+import { Avatar, Button, Card } from 'antd';
 import type { PaginationProps } from 'antd';
 import { Pagination } from 'antd';
 import { usePathname, useRouter } from 'next/navigation';
@@ -22,6 +22,10 @@ const ClientViewClass = (props: any) => {
     // console.log("check quizzs: ",quizzs)
     const handleSettingQuizz=(id: string)=>{
         console.log("check quizzId: ",id)
+    }
+    const handleDoQuizz=(items: any)=>{
+        // console.log("check quizz: ",items)
+        router.replace(`/doquizz?_id=${items._id}`)
     }
     return (
         <div style={{
@@ -50,12 +54,10 @@ const ClientViewClass = (props: any) => {
                                         />
                                     }
                                     actions={[
-                                        <SettingOutlined key="setting" 
-                                            onClick={()=>handleSettingQuizz(items.id)}
-                                        />,
-                                        <EditOutlined key="edit" />,
-                                        <EllipsisOutlined key="ellipsis" />,
+                                        <Button type='primary' size='large'>Start Quizz</Button>
                                     ]}
+                                    hoverable={true}
+                                    onClick={()=>handleDoQuizz(items)}
                                 >
                                     <Meta
                                         avatar={<Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />}
