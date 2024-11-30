@@ -15,7 +15,7 @@ const AdminHeader = (props: any) => {
         {
             key: '1',
             icon: <CgProfile style={{ fontSize: '2vw', color: 'powderblue' }} />,
-            label: <div style={{ display: 'flex', alignItems: 'center', fontSize: '1.5vw', color: 'powderblue' }}>{session?.user?.email}</div>,
+            label: <div style={{ display: 'flex', alignItems: 'center', fontSize: '1.5vw', color: 'powderblue' }}>{session?.user?.username}</div>,
             children: [
                 { key: '12', label: <div style={{ fontSize: '1vw' }} onClick={() => signOut()}>Log out</div> },
                 { key: '11', label: <div style={{ fontSize: '1vw' }} >Profile</div> },

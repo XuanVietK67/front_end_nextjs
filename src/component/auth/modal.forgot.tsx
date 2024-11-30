@@ -104,7 +104,7 @@ const Forgot = (props: any) => {
         }
     }
     const handleStep1 = async () => {
-        setCurrent(current + 1)
+        // setCurrent(current + 1)
         const res = await sendRequest({
             method: 'POST',
             url: 'http://localhost:8080/api/auth/verify',
@@ -113,6 +113,16 @@ const Forgot = (props: any) => {
                 code: code
             }
         })
+        if(!(res as any).error){
+            setCurrent(current+1)
+        }
+        else{
+            console.log(res)
+            notification.error({
+                message:" Active error",
+                description: (res as any).message
+            })
+        }
     }
     const handleStep2 = async () => {
         const res = await sendRequest({

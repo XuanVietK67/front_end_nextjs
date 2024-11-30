@@ -17,7 +17,9 @@ export default async function DasboardLayout({
         <Admin>
             <div style={{ display: 'flex', height:'100vh',width:'100vw'  }}>
                 <div className="left">
-                    <AdminSideBar />
+                    <AdminSideBar 
+                        session={session}
+                    />
                 </div>
                 <div className="right" style={{ minWidth: "86vw" }}>
                     <AdminHeader
@@ -30,7 +32,7 @@ export default async function DasboardLayout({
                             {children}
                         </AdminContent>
                     </div>
-                    <AdminFooter />
+                    {/* <AdminFooter /> */}
                 </div>
             </div>
         </Admin>

@@ -3,6 +3,7 @@
 import { sendRequest } from "@/utils/api"
 import { CloseOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Checkbox, CheckboxProps, Flex, GetProp, Input, notification, Select, Upload, UploadProps } from "antd";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from 'react';
 import { AiFillPlusCircle } from "react-icons/ai";
 import { FcAnswers } from "react-icons/fc";
@@ -67,6 +68,9 @@ const ClientEditQuizz = (props: any) => {
     const [quizzId, setQuizzId] = useState("")
 
     // console.log("check dsta: ",data)
+
+    const router = useRouter()
+
 
     let OPTIONS = [{}];
     data.forEach((items: any, index: number) => {
@@ -193,7 +197,7 @@ const ClientEditQuizz = (props: any) => {
                 authorization: ` Bearer ${accessToken}`,
             }),
             body: JSON.stringify({
-                _id, name, description, level, image
+                _id, name, description, level, image: image ? image: ""
             })
         })
         const resUpdateQuiz = await updateQuiz.json()
@@ -213,11 +217,12 @@ const ClientEditQuizz = (props: any) => {
             return await updateQuestion.json()
         })))
         console.log("check res: ",res)
-        // if(res.statusCode==200){
-        //     notification.success({
-        //         message: "Update quizz Successfully"
-        //     })
-        // }
+        if(res){
+            notification.success({
+                message: "Update quizz Successfully"
+            })
+            router.replace('/dashboard/classes/aclass/viewquizz')
+        }
         // console.log("check res update: ", res)
     }
 

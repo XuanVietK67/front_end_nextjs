@@ -27,7 +27,7 @@ const ClientRegisterPage = () => {
         if (!(res as any).error) {
             notification.success({
                 message: "Register Success",
-                description: "Please check your gmail to get the code, please active your account."
+                // description: "Please check your gmail to get the code, please active your account."
             })
             router.push(`/auth/login`)
         }

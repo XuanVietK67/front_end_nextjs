@@ -33,7 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         message: (res as any).message,
                         statusCode: (res as any).statusCode,
                         ... (res as any).data.user,
-                        access_token: (res as any).data.access_token
+                        access_token: (res as any).data.access_token,
                     }
                     return response
                 }
